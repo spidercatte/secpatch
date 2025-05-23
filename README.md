@@ -1,34 +1,38 @@
-# Academic Research
-
+# SecPatch
 
 ## Overview
 
-AI-driven agent designed to facilitate the exploration of the academic landscape surrounding seminal research works. Recognizing the challenge researchers face in navigating the expanding body of literature influenced by foundational studies, this agent offers a streamlined approach. By accepting a seminal paper identified provided as file input, the agent first analyzes the core contributions of the specified work.
+<!-- TODO: Refine this overview to accurately describe SecPatch's mission and value proposition. -->
+SecPatch is an AI-driven agent designed to streamline and enhance the security patching lifecycle for software systems. It addresses the critical challenge of timely and effective vulnerability remediation by automating and assisting in the identification of vulnerabilities, discovery of relevant patches, analysis of patch impacts, and guidance through the deployment process.
 
-1. It then leverages specialized Agent tools to identify and retrieve via Google Search recent academic publications that cite this seminal paper, mapping its contemporary influence.
-2. Finally, synthesizing the analysis of the original paper with the findings from recent citing literature, and again utilizing specialized analytical tools, the agent proposes potential future research directions.
+Key capabilities include:
 
-This capability aims to provide researchers with valuable insights into the ongoing impact of seminal research and to highlight promising avenues for novel investigation, thereby accelerating the research discovery process.
+1.  **Vulnerability Identification:** Ingests data from various sources (e.g., CVE databases, security advisories, vulnerability scan reports) to pinpoint security weaknesses in target systems or software.
+2.  **Patch Discovery and Assessment:** Leverages specialized tools and knowledge bases to find appropriate security patches for identified vulnerabilities, assessing their relevance and potential side effects.
+3.  **Impact Analysis:** Analyzes the potential impact of applying a patch, considering factors like system stability, dependencies, and operational risk.
+4.  **Deployment Guidance:** Offers recommendations and can assist in orchestrating the patch deployment process, potentially integrating with existing patch management infrastructure.
+
+SecPatch aims to provide security teams and system administrators with actionable intelligence and automation to reduce their systems' exposure to threats, improve their security posture, and manage the patching process more efficiently.
 
 ## Agent Details
 
-The key features of the Academic Research include:
+The key features of SecPatch include:
 
 | Feature | Description |
 | --- | --- |
 | **Interaction Type** | Conversational |
-| **Complexity**  | Easy |
+| **Complexity**  | Medium <!-- TODO: Adjust if SecPatch is simpler or more complex --> |
 | **Agent Type**  | Multi Agent |
-| **Components**  | Tools: built-in Google Search |
-| **Vertical**  | Education |
-
+| **Components**  | Tools: Vulnerability Databases (e.g., NVD), Patch Information Systems, Code Analysis (optional), Configuration Management (optional) <!-- TODO: List actual components/tools used --> |
+| **Vertical**  | Cybersecurity / Software Security |
 
 
 ### Agent architecture:
 
 This diagram shows the detailed architecture of the agents and tools used
 to implement this workflow.
-<img src="academic-researcher.png" alt="academic researcher" width="800"/>
+<!-- TODO: Replace with actual SecPatch architecture diagram and update path if necessary -->
+<img src="secpatch-architecture.png" alt="SecPatch Agent Architecture" width="800"/>
 
 ## Setup and Installation
 
@@ -88,7 +92,7 @@ ADK provides convenient ways to bring up agents locally and interact with them.
 You may talk to the agent using the CLI:
 
 ```bash
-adk run academic_research
+adk run secpatch
 ```
 
 Or on a web interface:
@@ -342,7 +346,7 @@ For running tests and evaluation, install the extra dependencies:
 poetry install --with dev
 ```
 
-Then the tests and evaluation can be run from the `academic-research` directory using
+Then the tests and evaluation can be run from the `secpatch` directory using
 the `pytest` module:
 
 ```bash
@@ -358,7 +362,7 @@ that the agent's responses match a pre-defined response reasonablly well.
 
 ## Deployment
 
-The Academic Co-Research can be deployed to Vertex AI Agent Engine using the following
+The SecPatch agent can be deployed to Vertex AI Agent Engine using the following
 commands:
 
 ```bash
@@ -396,10 +400,10 @@ $ python3 deployment/test_deployment.py --resource_id=${AGENT_ENGINE_ID} --user_
 Found agent with resource ID: ...
 Created session for user ID: ...
 Type 'quit' to exit.
-Input: Hello. What can you do for me?
-Response: Hello! I'm an AI Research Assistant. I can help you analyze a seminal academic paper.
+Input: What can you do?
+Response: Hello! I'm SecPatch, your AI Security Patching Assistant. I can help you identify vulnerabilities in your systems, find appropriate patches, analyze their impact, and guide you through the patching process.
 
-To get started, please provide the seminal paper you wish to analyze as a PDF.
+How can I assist you today? For example, you can ask me to check a specific software or system for vulnerabilities.
 ```
 
 To delete the deployed agent, you may run the following command:
@@ -410,6 +414,7 @@ python3 deployment/deploy.py --delete --resource_id=${AGENT_ENGINE_ID}
 
 ## Customization
 
+<!-- TODO: Update this based on SecPath -->
 The Academic Research can be customized to better suit your requirements. For example:
 
  1. Integrate Specialized Search Tools: Augment the agent's discovery capabilities by incorporating additional academic search functionalities, such as an ArXiv-specific search tool, to complement or replace the default search mechanism, allowing for more targeted retrieval from specialized databases and preprint archives.
