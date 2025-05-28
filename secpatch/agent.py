@@ -27,8 +27,6 @@ vuln_fix_coordinator = LlmAgent(
     tools=[
         AgentTool(agent=vuln_websearch_agent), # This agent is responsible for searching CVE information and code locations
         AgentTool(agent=vuln_fix_agent), # This agent is responsible for applying the fixes,
-        github_tools, # GitHub MCP toolset for repository operations
-        file_tools, # File operations like reading/writing files
     ],
 )
 
