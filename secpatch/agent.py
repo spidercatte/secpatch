@@ -6,7 +6,8 @@ from google.adk.tools.agent_tool import AgentTool
 from secpatch import prompt
 from secpatch.sub_agents.vuln_websearch.agent import vuln_websearch_agent
 from secpatch.sub_agents.vuln_fix.agent import vuln_fix_agent
-from secpatch.tools import github_interaction_tools
+from secpatch.tools.mcp_tool import github_tools, file_tools
+
 
 
 MODEL = "gemini-2.5-pro-preview-05-06"
@@ -25,14 +26,16 @@ vuln_fix_coordinator = LlmAgent(
     output_key="fix_coordination_result", # Renamed for clarity
     tools=[
         AgentTool(agent=vuln_websearch_agent), # This agent is responsible for searching CVE information and code locations
-        AgentTool(agent=vuln_fix_agent), # This agent is responsible for applying the fixes
-        *github_interaction_tools.github_interaction_tools, # Unpacks all tools from github_interaction_tools.py (create_pull_request, create_github_issue),
+        AgentTool(agent=vuln_fix_agent), # This agent is responsible for applying the fixes,
+        github_tools, # GitHub MCP toolset for repository operations
+        file_tools, # File operations like reading/writing files
     ],
 )
 
 root_agent = vuln_fix_coordinator
 
 if __name__ == "__main__":
+
     print("Initializing the CVE Fix Coordination process...")
 
     # Input for the coordinator
@@ -43,8 +46,11 @@ if __name__ == "__main__":
 
     print(f"Attempting to fix CVE: {initial_cve_input['cve_id']} in {initial_cve_input['repository_url']}")
 
+    async def main():
+        # Assuming vuln_fix_coordinator.process is an async method
+        coordination_result = await vuln_fix_coordinator.process(initial_cve_input)
+        print("\n--- CVE Fix Coordination Result ---")
+        print(coordination_result.output["fix_coordination_result"]) # Access the output using the output_key
+        print("-----------------------------------")
 
-
-    print("\n--- CVE Fix Coordination Result ---")
-    #print(coordination_result)
-    print("-----------------------------------")
+    asyncio.run(main())
