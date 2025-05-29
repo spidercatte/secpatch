@@ -46,7 +46,7 @@ async def try_tools_sequentially(tools, args, exit_stack):
 
 
 # Create a higher-order function that handles connection and resource management
-def create_mcp_tool_executor(command, args=None, env=None, tool_filter=None):
+def create_mcp_tool_executor(command, args=None, env=None):
     """Create a function that connects to an MCP server and executes tools."""
     async def mcp_tool_executor(**kwargs):
         # Connect to MCP server
@@ -56,8 +56,6 @@ def create_mcp_tool_executor(command, args=None, env=None, tool_filter=None):
                 args=args or [],
                 env=env or {},
             ),
-            # Optional: Filter which tools from the MCP server are exposed
-            tool_filter=tool_filter or [],
         )
         
         try:
@@ -88,14 +86,5 @@ file_tools = create_mcp_tool_executor(
         '-y',  # Arguments for the command
         '@modelcontextprotocol/server-filesystem',
         os.path.abspath(TARGET_FOLDER_PATH),
-    ],
-    tool_filter=[
-        'read_file',
-        'read_multiple_files',
-        'list_directory',
-        'directory_tree',
-        'search_files',
-        'get_file_info',
-        'list_allowed_directories',
     ],
 )

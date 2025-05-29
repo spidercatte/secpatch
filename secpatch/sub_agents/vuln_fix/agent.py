@@ -22,16 +22,9 @@ vuln_fix_agent = Agent(
     #output_schema=types.Itinerary,
     #generate_content_config=types.json_response_config,
     tools=[
-        google_search, # Still useful for very specific code searches within the fix agent
         github_tools, # Add the GitHub MCP toolset
-        file_tools,
+        file_tools, # Add the file system MCP toolset
         package_manager_install_tool_instance, # Add package manager install tool
         run_tests_tool_instance, # Add test runner tool
-        # Additional tools can be added here as needed
-        # file_system_tools, # Add file system tools
-        # package_manager_tool, # Add package manager tool
-        # test_runner_tool, # Add test runner tool
-        # ... other necessary tools like read_file, write_file etc.
-
     ],
 )
