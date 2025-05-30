@@ -1,7 +1,7 @@
 # git_tool.py
 import subprocess
 from typing import Dict, Any
-from google.adk.tools import FunctionTool
+from google.adk.tools import FunctionTool, ToolContext
 
 
 def _run_git_command(command: list[str], cwd: str = None) -> Dict[str, Any]:
@@ -22,7 +22,7 @@ def _run_git_command(command: list[str], cwd: str = None) -> Dict[str, Any]:
     except Exception as e:
         return {"success": False, "error": f"An unexpected error occurred: {str(e)}"}
 
-def git_clone(repo_url: str, directory: str = None) -> Dict[str, Any]:
+def git_clone(repository_url: str, directory: str, tool_context: ToolContext):
     """
     Clones a Git repository from the given URL into the specified directory.
 
@@ -33,12 +33,12 @@ def git_clone(repo_url: str, directory: str = None) -> Dict[str, Any]:
     Returns:
         A dictionary indicating success, stdout, and stderr.
     """
-    command = ["git", "clone", repo_url]
+    command = ["git", "clone", repository_url]
     if directory:
         command.append(directory)
     return _run_git_command(command)
 
-def git_pull(repo_path: str = ".") -> Dict[str, Any]:
+def git_pull(repository_url: str, tool_context: ToolContext):
     """
     Pulls changes from the remote repository into the current branch.
 
@@ -48,9 +48,9 @@ def git_pull(repo_path: str = ".") -> Dict[str, Any]:
         A dictionary indicating success, stdout, and stderr.
     """
     command = ["git", "pull"]
-    return _run_git_command(command, cwd=repo_path)
+    return _run_git_command(command, cwd=repository_url)
 
-def git_add(repo_path: str = ".", files: str = ".") -> Dict[str, Any]:
+def git_add(repository_url: str, files: str, tool_context: ToolContext):
     """
     Adds specified files to the Git staging area.
 
@@ -61,9 +61,9 @@ def git_add(repo_path: str = ".", files: str = ".") -> Dict[str, Any]:
         A dictionary indicating success, stdout, and stderr.
     """
     command = ["git", "add"] + files.split()
-    return _run_git_command(command, cwd=repo_path)
+    return _run_git_command(command, cwd=repository_url)
 
-def git_commit(repo_path: str = ".", message: str = "Automated commit by agent") -> Dict[str, Any]:
+def git_commit(repository_url: str, message: str, tool_context: ToolContext):
     """
     Commits staged changes with a given commit message.
 
@@ -74,9 +74,9 @@ def git_commit(repo_path: str = ".", message: str = "Automated commit by agent")
         A dictionary indicating success, stdout, and stderr.
     """
     command = ["git", "commit", "-m", message]
-    return _run_git_command(command, cwd=repo_path)
+    return _run_git_command(command, cwd=repository_url)
 
-def git_push(repo_path: str = ".") -> Dict[str, Any]:
+def git_push(repository_url: str, tool_context: ToolContext):
     """
     Pushes committed changes to the remote repository.
 
@@ -86,9 +86,9 @@ def git_push(repo_path: str = ".") -> Dict[str, Any]:
         A dictionary indicating success, stdout, and stderr.
     """
     command = ["git", "push"]
-    return _run_git_command(command, cwd=repo_path)
+    return _run_git_command(command, cwd=repository_url)
 
-def git_checkout(repo_path: str = ".", branch_name: str = "main", create_new: bool = False) -> Dict[str, Any]:
+def git_checkout(repository_url: str, branch_name: str, create_new: bool, tool_context: ToolContext):
     """
     Switches to a specified branch or creates a new one.
 
@@ -103,9 +103,9 @@ def git_checkout(repo_path: str = ".", branch_name: str = "main", create_new: bo
     if create_new:
         command.append("-b")
     command.append(branch_name)
-    return _run_git_command(command, cwd=repo_path)
+    return _run_git_command(command, cwd=repository_url)
 
-def git_status(repo_path: str = ".") -> Dict[str, Any]:
+def git_status(repository_url: str, tool_context: ToolContext):
     """
     Shows the working tree status.
 
@@ -115,7 +115,7 @@ def git_status(repo_path: str = ".") -> Dict[str, Any]:
         A dictionary indicating success, stdout, and stderr.
     """
     command = ["git", "status"]
-    return _run_git_command(command, cwd=repo_path)
+    return _run_git_command(command, cwd=repository_url)
 
 
 
