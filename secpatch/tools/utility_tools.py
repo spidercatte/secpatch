@@ -7,7 +7,7 @@ from google.adk.tools import ToolContext
 
 
 # --- Package Manager Tool ---
-def package_manager_install_tool(tool_context: ToolContext):
+def package_manager_install_tool(project_path: str, affected_library_package: str, suggested_fix_version: str, tool_context: ToolContext):
     vuln_websearch_output = tool_context.state.get("vuln_websearch_output")
 
     if not vuln_websearch_output:
@@ -97,7 +97,7 @@ def package_manager_install(project_path: str, affected_library_package: str, su
 
 
 # --- Test Runner Tool ---
-def run_tests_tool(tool_context: ToolContext):
+def run_tests_tool(project_path: str , tool_context: ToolContext):
     """
     Tool to run tests for the project using common test runners
     (pytest for Python, npm test for Node.js).
