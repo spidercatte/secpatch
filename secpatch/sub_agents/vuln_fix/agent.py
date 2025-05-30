@@ -9,6 +9,7 @@ import os # For GITHUB_PERSONAL_ACCESS_TOKEN
 from secpatch.sub_agents.vuln_fix import prompt
 from secpatch.tools.utility_tools import package_manager_install_tool_instance, run_tests_tool_instance
 from secpatch.tools.mcp_tool import github_tools, file_tools
+from secpatch.tools.git_tool import git_tools  # Import your custom git_tool.py
 from secpatch.tools import types
 
 
@@ -24,6 +25,7 @@ vuln_fix_agent = Agent(
     tools=[
         github_tools, # Add the GitHub MCP toolset
         file_tools, # Add the file system MCP toolset
+        *git_tools, # Add the git toolset
         package_manager_install_tool_instance, # Add package manager install tool
         run_tests_tool_instance, # Add test runner tool
     ],

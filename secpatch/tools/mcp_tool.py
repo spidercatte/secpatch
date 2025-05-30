@@ -1,4 +1,3 @@
-
 from google.adk import Agent
 from google.adk.tools import google_search
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParameters # Import MCPToolset
@@ -29,46 +28,64 @@ async def execute_tool(tool, args):
         return (False, None, str(e))  # Failed, no result, error message
 
 
-# Function to try tools sequentially until one succeeds
-async def try_tools_sequentially(tools, args, exit_stack):
-    """Try each tool in sequence until one succeeds."""
-    errors = []
-    
-    for tool in tools:
-        success, result, error = await execute_tool(tool, args)
-        if success:
-            return result
-        errors.append(f"Tool '{tool.name}' failed: {error}")
-    
-    if errors:
-        return f"All tools failed: {'; '.join(errors)}"
-    return "No tools available"
-
-
 # Create a higher-order function that handles connection and resource management
 def create_mcp_tool_executor(command, args=None, env=None):
-    """Create a function that connects to an MCP server and executes tools."""
+    """
+    Create a function that connects to an MCP server and executes a specific tool
+    identified by 'tool_name'.
+    """
     async def mcp_tool_executor(**kwargs):
+        # kwargs is expected to contain 'tool_name' and 'args' for that tool
+        # e.g., tool_name="repos_clone_repository", args={"owner": "...", "repo": "..."}
+
+        tool_to_execute_name = kwargs.get("tool_name")
+        # Default tool_arguments to an empty dictionary if 'args' key is missing or None.
+        # This allows the call to proceed to the MCP tool, which can then validate
+        # if an empty args dict is acceptable or if specific arguments are missing.
+        tool_arguments = kwargs.get("args", {})
+
+        if not tool_to_execute_name:
+            return "Error: 'tool_name' not provided to MCP tool executor."
+        # The explicit check for `tool_arguments is None` is less critical now,
+        # as it defaults to {}. If the LLM explicitly passes args=None,
+        # tool_arguments would become None, and the original check might be useful.
+        # However, with the default to {}, this path is less likely.
+
         # Connect to MCP server
-        tools, exit_stack = await MCPToolset.from_server(
-            connection_params=StdioServerParameters(
-                command=command,
-                args=args or [],
-                env=env or {},
-            ),
-        )
-        
+        mcp_tools = []
+        exit_stack = None
         try:
-            # Try all tools until one succeeds
-            return await try_tools_sequentially(tools, kwargs, exit_stack)
+            mcp_tools, exit_stack = await MCPToolset.from_server(
+                connection_params=StdioServerParameters(
+                    command=command,
+                    args=args or [],
+                    env=env or {},
+                ),
+            )
+            
+            selected_tool = next((t for t in mcp_tools if t.name == tool_to_execute_name), None)
+            
+            if not selected_tool:
+                available_tool_names = [t.name for t in mcp_tools]
+                return f"Error: Tool '{tool_to_execute_name}' not found in MCP server. Available tools: {available_tool_names}"
+
+            # Execute the selected tool with its specific arguments
+            success, result, error_msg = await execute_tool(selected_tool, tool_arguments)
+            if success:
+                return result
+            else:
+                return f"Tool '{selected_tool.name}' failed: {error_msg}"
+        except Exception as e:
+            # Catch exceptions during connection, tool finding, or execution if not caught by execute_tool
+            return f"Error in MCP tool executor: {str(e)}"
         finally:
-            # Always cleanup
-            await exit_stack.aclose()
+            if exit_stack:
+                await exit_stack.aclose()
     
     return mcp_tool_executor
 
 
-# Create our YouTube search function
+# Create our GitHub MCP tool executor
 github_tools = create_mcp_tool_executor(
     command=github_mcp_server_command,
     args=["stdio"],
@@ -78,8 +95,14 @@ github_tools = create_mcp_tool_executor(
     }
 )
 
-TARGET_FOLDER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "/temp")  # Define the target folder path for file operations
-# Create our YouTube search function
+#TARGET_FOLDER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "/temp")  # Define the target folder path for file operations
+# Define the base path for the temp folder
+BASE_PATH = "/Users/catbalajadia/Downloads/google_hack/secpatch"
+TARGET_FOLDER_PATH = os.path.join(BASE_PATH, "temp")
+
+# Ensure the temp folder exists
+os.makedirs(TARGET_FOLDER_PATH, exist_ok=True)
+# Create our file system MCP tool executor
 file_tools = create_mcp_tool_executor(
     command='npx',
     args=[
@@ -88,3 +111,5 @@ file_tools = create_mcp_tool_executor(
         os.path.abspath(TARGET_FOLDER_PATH),
     ],
 )
+
+__all__ = ["github_tools", "file_tools"]
