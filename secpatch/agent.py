@@ -6,7 +6,7 @@ from google.adk.tools.agent_tool import AgentTool
 from secpatch import prompt
 from secpatch.sub_agents.vuln_websearch.agent import vuln_websearch_agent
 from secpatch.sub_agents.vuln_fix.agent import vuln_fix_agent
-from secpatch.tools.mcp_tool import github_tools, file_tools
+from secpatch.tools.mcp_tool import github_mcp_tools, file_mcp_tools
 
 
 

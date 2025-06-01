@@ -86,7 +86,7 @@ def create_mcp_tool_executor(command, args=None, env=None):
 
 
 # Create our GitHub MCP tool executor
-github_tools = create_mcp_tool_executor(
+github_mcp_tools = create_mcp_tool_executor(
     command=github_mcp_server_command,
     args=["stdio"],
     env={
@@ -95,21 +95,28 @@ github_tools = create_mcp_tool_executor(
     }
 )
 
-#TARGET_FOLDER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "/temp")  # Define the target folder path for file operations
-# Define the base path for the temp folder
-BASE_PATH = "/Users/catbalajadia/Downloads/google_hack/secpatch"
-TARGET_FOLDER_PATH = os.path.join(BASE_PATH, "temp")
+# Determine the root directory of the 'secpatch' project dynamically.
+# Assumes mcp_tool.py is at <project_root_dir>/secpatch_package/tools/mcp_tool.py
+# To get to <project_root_dir> (e.g., /Users/catbalajadia/Downloads/google_hack/secpatch),
+# we go up two levels from the directory of mcp_tool.py.
+_current_file_dir = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT_DIR = os.path.abspath(os.path.join(_current_file_dir, "..", ".."))
 
-# Ensure the temp folder exists
-os.makedirs(TARGET_FOLDER_PATH, exist_ok=True)
+# MCP_TEMP_DIR is the directory that the file system MCP server will be rooted in.
+# This is where temporary project clones and files will be handled by file_mcp_tools.
+MCP_TEMP_DIR = os.path.join(PROJECT_ROOT_DIR, "temp")
+
+# Ensure this temp directory exists
+os.makedirs(MCP_TEMP_DIR, exist_ok=True)
+
 # Create our file system MCP tool executor
-file_tools = create_mcp_tool_executor(
+file_mcp_tools = create_mcp_tool_executor(
     command='npx',
     args=[
         '-y',  # Arguments for the command
         '@modelcontextprotocol/server-filesystem',
-        os.path.abspath(TARGET_FOLDER_PATH),
+        MCP_TEMP_DIR, # This path is now dynamically determined and absolute
     ],
 )
 
-__all__ = ["github_tools", "file_tools"]
+__all__ = ["github_mcp_tools", "file_mcp_tools"]

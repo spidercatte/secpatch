@@ -5,6 +5,34 @@ from typing import Dict, Any, List, Optional
 from google.adk.tools import FunctionTool
 from google.adk.tools import ToolContext
 
+def clear_temp_directory(project_path: str, tool_context: ToolContext):
+    """
+    Clears the temporary directory specified by project_path.
+    If the directory exists, it removes it and then creates a new empty directory.
+
+    Args:
+        project_path: The path to the temporary directory to clear.
+
+    Returns:
+        A dictionary with 'success', 'stdout', 'stderr', and 'error' keys.
+    """
+    try:
+        # Ensure that the project_path contains `temp` or similar to avoid accidental deletion of important directories
+        if os.path.exists(project_path) and "temp" in project_path: 
+            # Remove the existing directory
+            subprocess.run(["rm", "-rf", project_path], check=True)
+        # Create a new empty directory and provide chmod 755 permissions
+        project_path = os.path.abspath(project_path)  # Ensure absolute path
+        if not project_path.endswith(os.sep):
+            project_path += os.sep
+        # Create the directory with 755 permissions
+        if not os.path.exists(project_path):
+            os.makedirs(project_path, mode=0o755, exist_ok=True)
+        return {"success": True, "stdout": f"Temporary directory {project_path} cleared and recreated.", "stderr": ""}
+    except subprocess.CalledProcessError as e:
+        return {"success": False, "stdout": "", "stderr": str(e), "error": "Failed to clear temp directory."}
+    except Exception as e:
+        return {"success": False, "stdout": "", "stderr": "", "error": f"An unexpected error occurred: {str(e)}"}
 
 # --- Package Manager Tool ---
 def package_manager_install_tool(project_path: str, affected_library_package: str, suggested_fix_version: str, tool_context: ToolContext):
@@ -198,8 +226,13 @@ run_tests_tool_instance = FunctionTool(
     func=run_tests_tool,
 )
 
+clear_temp_directory_tool_instance = FunctionTool(
+    func=clear_temp_directory,
+)
+
 # Aggregate them into a list for easy import
 utility_tools = [
     package_manager_install_tool_instance,
     run_tests_tool_instance,
+    clear_temp_directory_tool_instance,
 ]
