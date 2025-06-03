@@ -139,7 +139,7 @@ def run_tests_tool(project_path: str , tool_context: ToolContext):
 
     project_path = vuln_websearch_output.get("project_path")
     if not project_path:
-        return {"success": False, "error": "No project path specified in vuln_websearch_output."}
+        return {"success": False, "error": "No project path specified for run_tests_tool."}
 
     return run_tests(project_path)
 

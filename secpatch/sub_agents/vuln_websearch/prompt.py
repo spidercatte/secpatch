@@ -34,30 +34,38 @@ Example:
 `{{ "search_type": "library_code_locations", "query_details": {"library_name": "requests", "version": "2.28.1", "cve_id": "CVE-2023-12345"} }}`
 `{{ "search_type": "project_code_locations", "query_details": {"project_repo_url": "https://github.com/myorg/myproject", "affected_files": ["src/main.py", "lib/utils.js"]} }}`
 
+**Input Example:**
+```json
+{ 
+    "cve_id": "CVE-2022-24999", # The CVE ID we found for qs library
+    "repository_url": "https://github.com/spidercatte/vulnerable-node-app" }
+}
+```
 
 **Output Requirements:**
 After performing all necessary searches and analyses, your very last step is to **directly output the JSON string** formulated according to the `search_type`.
 This JSON string, and **only this JSON string (without any surrounding text, explanations, or markdown code fences like ```json ... ```)**, will be your entire response to the calling agent.
 Ensure this JSON string is the content of your final message.
 
-# ... (JSON schema) ...
+# JSON schema example
 ```json
 {
-    "cve_id": "CVE-XXXX-YYYY",
-    "affected_library_package_name": "package-name",
-    "vulnerable_versions_found": ["version_string_1", "version_string_2"], // List of versions explicitly identified as vulnerable
-    "known_fixed_versions": ["version_string_A", "version_string_B", "version_string_C"], // List of all versions identified as containing the fix
-    "initial_affected_code_mentions": ["file/path/class", "function_name"],
-    "suggested_patch_details": { 
-        "description": "Short summary of the recommended code change.",
-        "diff": "Optional: Full diff content if available (e.g., from GitHub commit).",
-        "replacement_snippets": [ // Optional: Specific code blocks to replace or insert
-            {"file": "path/to/file.py", "original_code_snippet": "old_code", "new_code_snippet": "new_code"},
-            // ... more snippets
-        ],
-        "instructions": "Optional: Plain text instructions for manual application if no direct code is found."
+    "cve_id": "CVE-2022-24999",
+    "affected_library_package_name": "qs",
+    "vulnerable_versions_found": [">= 6.10.0, < 6.10.3", ">= 6.9.0, < 6.9.7", ">= 6.8.0, < 6.8.3", ">= 6.7.0, < 6.7.3", ">= 6.6.0, < 6.6.1", ">= 6.5.0, < 6.5.3"],
+    "known_fixed_versions": ["6.9.7", "6.8.3", "6.7.3", "6.6.1", "6.5.3", "6.4.1", "6.3.3", "6.2.4", "6.10.3"],
+    "initial_affected_code_mentions": ["qs.parse"],
+    "suggested_patch_details": {
+        "description": "Prototype Pollution vulnerability. An unauthenticated remote attacker can place the attack payload in the query string of the URL that is used to visit the application, such as a[__proto__]=b&a[__proto__]&a[length]=100000000. Upgrade to fixed versions.",
+        "diff": null,
+        "replacement_snippets": [],
+        "instructions": "Upgrade the qs library to version 6.2.4, 6.3.3, 6.4.1, 6.5.3, 6.6.1, 6.7.3, 6.8.3, 6.9.7, 6.10.3 or higher."
     },
-    "sources_used": ["URL1", "URL2"]
+    "sources_used": [
+        "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AbF9wXEyA6rAU38ZpSiqc2SVezei_xAta-sfDHNW2m6UnwxW8X9GzEruRzysIvgIPDodRhLhWNaLHEbOos9BvbN_P2dD7KnwiFj2y23ONvwl2lDreZMM-KcD1lEyOTLMoTGoyhGD4XXw8B7Gu8sGVr0=",
+        "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AbF9wXEz62PbmCXdI0UFkmO7UPzUOBNMOUAGmQgI75mgJwhcYqghtJzDRxtAzP-pxqAF1EFBJmav_Sf1Yvi6Vwzm0t9HGPhD5zPHpIMJp1tER84NMffjvqNPXlKlVX2RVL6UuSGA2sZEb3EWPQ=="
+    ]
 }
+```
 **IMPORTANT FINAL INSTRUCTION: Your entire direct output for this task MUST be the JSON object string as described and formatted above. No other text, explanation, or markdown (like ```json ... ```) should be included in your direct response. This JSON string is the `result` the calling agent expects.**
 """

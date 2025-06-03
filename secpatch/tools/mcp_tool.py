@@ -8,9 +8,6 @@ from secpatch.tools import git_tool # Import your custom git_tool.py
 from secpatch.tools import utility_tools
 
 
-
-MODEL = "gemini-2.5-pro-preview-05-06"
-
 # --- GitHub MCP Toolset Configuration (similar to github_assistant_agent.py) ---
 GITHUB_PERSONAL_ACCESS_TOKEN = os.environ.get("GITHUB_PERSONAL_ACCESS_TOKEN")
 if not GITHUB_PERSONAL_ACCESS_TOKEN:

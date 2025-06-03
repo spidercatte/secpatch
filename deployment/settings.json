@@ -1,0 +1,44 @@
+{
+    "github.codespaces.allowUnsafeConnections": true,
+    "github.codespaces.createCodespaceInNewWindow": true,
+    "github.copilot.chat.scopeSelection": true,
+    "@azure.argTenant": "",
+    "git.autofetch": true,
+    "azureFunctions.funcCliPath": "node_modules/.bin/func",
+    "github.copilot.chat.codeGeneration.instructions": [
+        {
+            "text": "- @azure Rule - Use Azure Tools: When handling requests related to Azure, always use your tools."
+        },
+        {
+            "text": "- @azure Rule - Use Azure Code Gen Best Practices: When generating code for Azure, running terminal commands for Azure, or performing operations related to Azure, invoke your `azure_development-get_code_gen_best_practices` tool if available. Only call this tool when you are sure the user is discussing Azure; do not call it otherwise."
+        },
+        {
+            "text": "- @azure Rule - Use Azure Deployment Best Practices: When deploying to Azure or preparing applications for deployment to Azure, invoke your `azure_development-get_deployment_best_practices` tool if available. Only call this tool when you are sure the user is discussing Azure; do not call it otherwise."
+        },
+        {
+            "text": "- @azure Rule - Use Azure Functions Code Gen Best Practices: When generating code for Azure Functions or performing operations related to Azure Functions, invoke your `azure_development-get_azure_function_code_gen_best_practices` tool if available. Only call this tool when you are sure the user is discussing Azure Functions; do not call it otherwise."
+        },
+        {
+            "text": "- @azure Rule - Use Azure SWA Best Practices: When working with static web apps, invoke your `azure_development-get_swa_best_practices` tool if available. Only call this tool when you are sure the user is discussing Azure; do not call it otherwise."
+        }
+    ],
+    "mcp": {
+        "servers": {
+            "github": {
+                "command": "/Users/catbalajadia/Downloads/google_hack/github-mcp-server/cmd/github-mcp-server/github-mcp-server",
+                "args": ["stdio"],
+                "env": {
+                    "GITHUB_PERSONAL_ACCESS_TOKEN": "${github_token}"
+                }
+            }
+        }
+    },
+    "inputs": [
+        {
+            "id": "github_token",
+            "type": "promptString",
+            "description": "GitHub Personal Access Token",
+            "password": true
+        }
+    ]
+}
