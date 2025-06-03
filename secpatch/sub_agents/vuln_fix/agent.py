@@ -12,7 +12,9 @@ from secpatch.tools.git_tool import git_tools  # Import your custom git_tool.py
 from secpatch.tools import types
 
 
-MODEL = "gemini-2.5-pro-preview-05-06"
+#MODEL = "gemini-2.5-pro-preview-05-06"
+MODEL ="gemini-2.0-flash"
+#MODEL = "gemini-1.5-flash-preview-0514" # Or latest available Flash model
 
 vuln_fix_agent = Agent(
     model=MODEL,

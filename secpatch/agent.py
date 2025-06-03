@@ -6,12 +6,12 @@ from google.adk.tools.agent_tool import AgentTool
 from secpatch import prompt
 from secpatch.sub_agents.vuln_websearch.agent import vuln_websearch_agent
 from secpatch.sub_agents.vuln_fix.agent import vuln_fix_agent
-from secpatch.tools.mcp_tool import github_mcp_tools, file_mcp_tools
+#from secpatch.sub_agents.vuln_dbsearch.agent import database_agent # Import the database_agent
+from secpatch.tools.mcp_tool import toolbox_tools # Import the MCP toolsets
 
 
 
-MODEL = "gemini-2.5-pro-preview-05-06"
-
+MODEL = "gemini-2.0-flash" # Or latest available Flash modeli
 
 vuln_fix_coordinator = LlmAgent(
     name="vuln_fix_coordinator",
@@ -25,6 +25,8 @@ vuln_fix_coordinator = LlmAgent(
     instruction=prompt.VULN_FIX_COORDINATOR_PROMPT,
     output_key="fix_coordination_result", # Renamed for clarity
     tools=[
+        *toolbox_tools, # Add the Toolbox tools for database operations.
+        #AgentTool(agent=database_agent), # This agent is responsible for querying vulnerability info from a database
         AgentTool(agent=vuln_websearch_agent), # This agent is responsible for searching CVE information and code locations
         AgentTool(agent=vuln_fix_agent), # This agent is responsible for applying the fixes,
     ],

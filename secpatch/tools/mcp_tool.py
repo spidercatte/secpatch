@@ -6,6 +6,7 @@ import os # For GITHUB_PERSONAL_ACCESS_TOKEN
 from secpatch.sub_agents.vuln_fix import prompt
 from secpatch.tools import git_tool # Import your custom git_tool.py
 from secpatch.tools import utility_tools
+from toolbox_core import ToolboxSyncClient
 
 
 # --- GitHub MCP Toolset Configuration (similar to github_assistant_agent.py) ---
@@ -115,5 +116,15 @@ file_mcp_tools = create_mcp_tool_executor(
         MCP_TEMP_DIR, # This path is now dynamically determined and absolute
     ],
 )
+
+
+# ----- Example of Google Cloud Tools (MCP Toolbox for Databases) -----
+TOOLBOX_URL = os.getenv("MCP_TOOLBOX_URL", "http://127.0.0.1:5000")
+
+# Initialize Toolbox client
+toolbox = ToolboxSyncClient(TOOLBOX_URL)
+# Load all the tools from toolset
+toolbox_tools = toolbox.load_toolset("my_toolset")
+
 
 __all__ = ["github_mcp_tools", "file_mcp_tools"]
