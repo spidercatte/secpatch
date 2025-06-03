@@ -16,6 +16,8 @@ google-cloud-aiplatform = { version = "^1.93.0", extras = [
     "adk",
     "agent-engines",
 ] }
+toolbox-core = "0.1.0"
+psycopg2 = "^2.9.10"
 
 [tool.poetry.group.dev]
 optional = true

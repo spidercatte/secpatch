@@ -1,0 +1,22 @@
+sources:
+  my-pg-source:
+    kind: postgres
+    host: 127.0.0.1
+    port: 5432
+    database: toolbox_db
+    user: toolbox_user
+    password: toolboxpw
+tools:
+  search-vulnerability-by-cve-id:
+    kind: postgres-sql
+    source: my-pg-source
+    description: Search for vulnerability information by cve_id.
+    parameters:
+      - name: cve_id
+        type: string
+        description: The cve id.
+    statement: SELECT * FROM vulnerability_info WHERE cve_id. ILIKE '%' || $1 || '%';
+toolsets:
+  my-toolset:
+    - search-vulnerability-by-cve-id
+    
